@@ -7,10 +7,12 @@ const int INF = 1e9;
 class Dijkstra {
     int graph[MAX_VERTICES][MAX_VERTICES];
     int vertices;
+    bool isDirected;
 
 public:
-    Dijkstra(int v) {
+    Dijkstra(int v, bool directed) {
         vertices = v;
+        isDirected = directed;
         for (int i = 0; i < vertices; i++)
             for (int j = 0; j < vertices; j++)
                 graph[i][j] = 0;
@@ -22,6 +24,9 @@ public:
             int u, v, w;
             cin >> u >> v >> w;
             graph[u][v] = w;
+            if (!isDirected) {
+                graph[v][u] = w;
+            }
         }
     }
 
@@ -51,6 +56,7 @@ public:
 
         for (int count = 0; count < vertices - 1; count++) {
             int u = selectMinVertex(dist, visited);
+            if (u == -1) break;
             visited[u] = true;
 
             for (int v = 0; v < vertices; v++) {
@@ -62,7 +68,7 @@ public:
 
         cout << "Shortest distances from source " << src << ":\n";
         for (int i = 0; i < vertices; i++) {
-            cout << "To " << i << " : " << dist[i] << endl;
+            cout << "To " << i << " : " << (dist[i] == INF ? -1 : dist[i]) << endl;
         }
     }
 };
@@ -74,7 +80,12 @@ int main() {
     cout << "Enter number of edges: ";
     cin >> e;
 
-    Dijkstra d(v);
+    char choice;
+    cout << "Is the graph directed? (y/n): ";
+    cin >> choice;
+    bool isDirected = (choice == 'y' || choice == 'Y');
+
+    Dijkstra d(v, isDirected);
     d.inputEdges(e);
 
     int src;

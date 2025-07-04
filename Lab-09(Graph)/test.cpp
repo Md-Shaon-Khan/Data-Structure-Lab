@@ -1,103 +1,83 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-const int MAX_VERTICS = 100;
-const int INF = 1e9;
+const int MAX_VERTICES = 10;
+const int MAX_EDGES = 10;
 
-class Dijkstra{
-    int graph[MAX_VERTICS][MAX_VERTICS];
+class Graph{
+    int adj[MAX_VERTICES][MAX_EDGES];
+    int count[MAX_VERTICES];
     int vertices;
     bool isDirected;
 
     public:
-    Dijkstra(int v,bool directed){
+    Graph(int v,bool directed){
         vertices = v;
         isDirected = directed;
+
         for(int i=0;i<vertices;i++){
-            for(int j=0;j<vertices;j++){
-                graph[i][j] = 0;
+            count[i] = 0;
+            for(int j=0;j<MAX_EDGES;j++){
+                adj[i][j] = -1;
             }
         }
     }
 
-    void inputEdges(int edges){
-        cout<<"Enter edges(from to weight):\n";
-        for(int i=0;i<edges;i++){
-            int u,v,w;
-            cin>>u>>v>>w;
+    void addEdge(int u,int v){
+        adj[u][count[u]] = v;
+        count[u]++;
 
-            graph[u][v] = w;
-            if(!isDirected){
-                graph[v][u] = w;
-            }
+        if(!isDirected){
+            adj[v][count[v]] = u;
+            count[v]++;
         }
     }
 
-    int selectMinVertex(int dist[],bool visited[]){
-        int min = INF;
-        int index = -1;
+    void BFS_Traversal(int start){
+        bool visited[MAX_VERTICES] = {false};
+        int queue[MAX_VERTICES];
+        int front = 0, rear = 0;
+        visited[start] = true;
+        queue[rear++] = start;
 
-        for(int i=0;i<vertices;i++){
-            if(!visited[i] && dist[i]<min){
-                min = dist[i];
-                index = i;
-            }
-        }
-        return index;
-    }
+        cout<<"BFS Traversal starting from vertex "<<start<<": ";
 
-    void dijkstra(int src){
-        int dist[MAX_VERTICS];
-        bool visited[MAX_VERTICS];
-
-        for(int i=0;i<vertices;i++){
-            dist[i] = INF;
-            visited[i] = false;
-        }
-
-        dist[src] = 0;
-
-        for(int count = 0; count < vertices-1; count++){
-            int u = selectMinVertex(dist,visited);
-            if(u == -1){
-                break;
-            }
-            visited[u] = true;
-
-            for(int v = 0; v < vertices; v++){
-                if(graph[u][v] && !visited[v] && dist[u]+graph[u][v] < dist[v]){
-                    dist[v] = dist[u] + graph[u][v];
+        while(front<rear){
+            int current = queue[front++];
+            cout<<current<<" ";
+            for(int i=0;i<count[current];i++){
+                int neighbor = adj[current][i];
+                if(!visited[neighbor]){
+                    visited[neighbor] = true;
+                    queue[rear++] = neighbor;
                 }
             }
         }
-        cout<<"Shortest distances from source "<<src<<" :\n";
-        for(int i=0;i<vertices;i++){
-            cout<<"To "<<i<<" : "<<(dist[i] == INF ? -1 : dist[i])<<endl;
-        }
+        cout<<endl;
     }
-
 };
 
 int main() {
-    int v, e;
+    int vertices, edges, directed;
     cout << "Enter number of vertices: ";
-    cin >> v;
+    cin >> vertices;
+
     cout << "Enter number of edges: ";
-    cin >> e;
+    cin >> edges;
 
-    char choice;
-    cout << "Is the graph directed? (y/n): ";
-    cin >> choice;
-    bool isDirected = (choice == 'y' || choice == 'Y');
+    cout << "Is the graph directed? (1 = Yes, 0 = No): ";
+    cin >> directed;
 
-    Dijkstra d(v, isDirected);
-    d.inputEdges(e);
+    Graph g(vertices, directed);
 
-    int src;
-    cout << "Enter source vertex: ";
-    cin >> src;
+    cout << "Enter edges (u v):" << endl;
+    for (int i = 0; i < edges; i++) {
+        int u, v;
+        cin >> u >> v;
+        g.addEdge(u, v);
+    }
 
-    d.dijkstra(src);
+    g.BFS_Traversal(0);
 
     return 0;
 }

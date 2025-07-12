@@ -29,9 +29,12 @@ bool binarySearch(int arr[], int n, int key) {
 
 int main() {
     int n, key;
+    cout<<"Enter how many number:";
     cin >> n;
     int arr[n];
+    cout<<"Enter the numbers:";
     takeInput(arr, n);
+    cout<<"Enter the search item:";
     cin >> key;
     bubbleSort(arr, n);
     if (binarySearch(arr, n, key))

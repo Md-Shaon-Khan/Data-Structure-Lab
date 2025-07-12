@@ -20,11 +20,15 @@ void printArray(int arr[], int n) {
 }
 
 int main() {
+    cout<<"Enter how many numbers: ";
     int n;
     cin >> n;
+
     int arr[n];
+    cout<<"Enter the numbers: ";
     takeInput(arr, n);
     bubbleSort(arr, n);
+    cout<<"After sorting:";
     printArray(arr, n);
     return 0;
 }

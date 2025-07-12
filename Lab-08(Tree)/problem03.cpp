@@ -81,17 +81,21 @@ int main(){
 
    Node* root = nullptr;
    int n,value;
-
+   cout<<"How many nodes:";
    cin>>n;
 
+   cout<<"Enter the nodes:";
    for(int i=1;i<=n;i++){
     cin>>value;
     root = insertionTree(root,value);
    }
+
+   cout<<"After inserting:";
    inorderTraversal(root);
 
    cout<<endl;
    int key;
+   cout<<"Enter the search key:";
    cin>>key;
 
    Node* found = searchTree(root,key);
